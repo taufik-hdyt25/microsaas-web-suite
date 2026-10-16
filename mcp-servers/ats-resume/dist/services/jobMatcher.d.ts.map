@@ -1,0 +1,1 @@
+{"version":3,"file":"jobMatcher.d.ts","sourceRoot":"","sources":["../../src/services/jobMatcher.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,UAAU,EAAE,MAAM,oBAAoB,CAAC;AAgBhE,qBAAa,UAAU;IACrB;;OAEG;IACH,MAAM,CAAC,eAAe,CAAC,IAAI,EAAE,MAAM,GAAG,MAAM,EAAE;IAwB9C;;OAEG;IACH,MAAM,CAAC,KAAK,CAAC,gBAAgB,EAAE,UAAU,GAAG,MAAM,EAAE,cAAc,EAAE,MAAM,GAAG,cAAc;CAqD5F"}

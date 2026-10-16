@@ -18,3 +18,9 @@ outputs/*
 # OS files
 .DS_Store
 Thumbs.db
+
+# MCP test outputs
+mcp-servers/**/test-output/*
+!mcp-servers/**/test-output/.gitkeep
+mcp-servers/**/test-assets/*
+!mcp-servers/**/test-assets/.gitkeep

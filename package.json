@@ -6,7 +6,11 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "mcp:ats": "node mcp-servers/ats-resume/dist/index.js",
+    "mcp:media": "node mcp-servers/media-converter/dist/index.js",
+    "build:mcp": "npm --prefix mcp-servers/ats-resume run build && npm --prefix mcp-servers/media-converter run build",
+    "test:mcp": "npm --prefix mcp-servers/ats-resume test && npm --prefix mcp-servers/media-converter test"
   },
   "keywords": [
     "micro-saas",
