@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro-SaaS Web Studio | ATS Resume & Media Converter</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Custom Shadcn Design System Tokens & Components -->
+  <link rel="stylesheet" href="/css/shadcn.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            border: "hsl(var(--border))",
+            input: "hsl(var(--input))",
+            ring: "hsl(var(--ring))",
+            background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
+            primary: {
+              DEFAULT: "hsl(var(--primary))",
+              foreground: "hsl(var(--primary-foreground))"
+            },
+            secondary: {
+              DEFAULT: "hsl(var(--secondary))",
+              foreground: "hsl(var(--secondary-foreground))"
+            },
+            destructive: {
+              DEFAULT: "hsl(var(--destructive))",
+              foreground: "hsl(var(--destructive-foreground))"
+            },
+            muted: {
+              DEFAULT: "hsl(var(--muted))",
+              foreground: "hsl(var(--muted-foreground))"
+            },
+            accent: {
+              DEFAULT: "hsl(var(--accent))",
+              foreground: "hsl(var(--accent-foreground))"
+            },
+            popover: {
+              DEFAULT: "hsl(var(--popover))",
+              foreground: "hsl(var(--popover-foreground))"
+            },
+            card: {
+              DEFAULT: "hsl(var(--card))",
+              foreground: "hsl(var(--card-foreground))"
+            }
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background text-foreground min-h-screen flex flex-col antialiased selection:bg-primary selection:text-primary-foreground">
+
+  <!-- Header / Navbar -->
+  <header class="sticky top-0 z-40 w-full border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold shadow-sm">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-semibold text-sm sm:text-base tracking-tight text-foreground">Micro-SaaS Studio</h1>
+            <span class="badge badge-secondary text-[10px] hidden sm:inline-flex">v1.0.0</span>
+          </div>
+          <p class="text-[11px] text-muted-foreground hidden sm:flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            ATS Scorer & Media Libvips Converter
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Shadcn style) -->
+      <nav class="tabs-container">
+        <button onclick="switchTab('ats')" id="tab-btn-ats" class="tab-trigger active flex items-center gap-1.5">
+          <i data-lucide="file-check-2" class="w-3.5 h-3.5"></i>
+          <span>ATS Resume</span>
+        </button>
+        <button onclick="switchTab('media')" id="tab-btn-media" class="tab-trigger flex items-center gap-1.5">
+          <i data-lucide="file-image" class="w-3.5 h-3.5"></i>
+          <span>Media Converter</span>
+        </button>
+        <button onclick="switchTab('api')" id="tab-btn-api" class="tab-trigger flex items-center gap-1.5">
+          <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+          <span>API & MCP</span>
+        </button>
+      </nav>
+
+      <!-- Right Actions: Theme Toggle & Status -->
+      <div class="flex items-center gap-2">
+        <button onclick="toggleTheme()" id="theme-toggle-btn" class="btn btn-ghost h-8 w-8 p-0" title="Ganti Tema (Dark / Light)">
+          <i data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
+        </button>
+        <div class="hidden md:flex items-center gap-1.5 text-xs text-muted-foreground border-l border-border pl-3">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Online</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: ATS RESUME STUDIO -->
+    <!-- ================================================================= -->
+    <div id="tab-content-ats" class="space-y-6">
+      
+      <!-- Sub-Tabs Navigation (Shadcn Style) -->
+      <div class="flex items-center justify-between border-b border-border pb-3 overflow-x-auto no-scrollbar gap-2">
+        <div class="tabs-container">
+          <button onclick="switchAtsSub('audit')" id="ats-sub-audit" class="tab-trigger active flex items-center gap-1.5">
+            <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>
+            <span>1. ATS Audit Scorer</span>
+          </button>
+          <button onclick="switchAtsSub('match')" id="ats-sub-match" class="tab-trigger flex items-center gap-1.5">
+            <i data-lucide="target" class="w-3.5 h-3.5"></i>
+            <span>2. JD Matcher</span>
+          </button>
+          <button onclick="switchAtsSub('star')" id="ats-sub-star" class="tab-trigger flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>3. STAR Rewriter</span>
+          </button>
+          <button onclick="switchAtsSub('generate')" id="ats-sub-generate" class="tab-trigger flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+            <span>4. Multi-Export</span>
+          </button>
+        </div>
+
+        <div class="hidden lg:flex items-center text-xs text-muted-foreground">
+          Standar Workday, Taleo & Greenhouse
+        </div>
+      </div>
+
+      <!-- 1.1 ATS AUDIT SECTION -->
+      <div id="ats-pane-audit" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Input Card -->
+        <div class="lg:col-span-6 card">
+          <div class="card-header pb-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="card-title flex items-center gap-2">
+                  <i data-lucide="file-edit" class="w-4 h-4 text-primary"></i>
+                  <span>Masukkan Teks Resume</span>
+                </h2>
+                <p class="card-description">Paste teks resume dalam format Markdown atau Plain Text.</p>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="loadSampleResume('good')" class="btn btn-secondary text-xs h-7 px-2">
+                  + Lolos ATS
+                </button>
+                <button onclick="loadSampleResume('weak')" class="btn btn-outline text-xs h-7 px-2">
+                  + Draf Biasa
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-content space-y-4">
+            <textarea id="resume-input-text" rows="13" class="textarea font-mono text-xs leading-relaxed" placeholder="Paste teks resume di sini..."></textarea>
+            <button onclick="runAtsAudit()" id="btn-run-audit" class="btn btn-primary w-full h-10 font-semibold shadow-sm">
+              <i data-lucide="search" class="w-4 h-4"></i>
+              <span>Audit ATS 100-Poin Sekarang</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Audit Results Card -->
+        <div class="lg:col-span-6 card">
+          <div class="card-header pb-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="card-title">Hasil Evaluasi Algoritma</h2>
+                <p class="card-description">Analisis kecocokan format, bobot kata kerja, dan eliminasi red-flags.</p>
+              </div>
+              <span id="audit-grade-badge" class="badge badge-secondary hidden">Grade -</span>
+            </div>
+          </div>
+          <div class="card-content">
+            
+            <!-- Empty State -->
+            <div id="audit-empty-state" class="py-16 text-center text-muted-foreground">
+              <div class="w-12 h-12 rounded-full border border-dashed border-border flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="clipboard-list" class="w-5 h-5 opacity-60"></i>
+              </div>
+              <p class="text-xs font-medium max-w-xs mx-auto">Klik tombol <strong>"Audit ATS 100-Poin Sekarang"</strong> untuk melihat skor kelolosan sistem rekrutmen.</p>
+            </div>
+
+            <!-- Score Results Container -->
+            <div id="audit-results-content" class="hidden space-y-5">
+              
+              <!-- Big Score Gauge -->
+              <div class="p-4 rounded-xl border border-border bg-card flex flex-col sm:flex-row items-center gap-4">
+                <div class="w-20 h-20 rounded-xl flex flex-col items-center justify-center text-white font-extrabold shadow-sm shrink-0 bg-emerald-600" id="score-box-color">
+                  <span class="text-3xl leading-none" id="audit-score-num">--</span>
+                  <span class="text-[10px] uppercase tracking-wider font-semibold opacity-80 mt-1">/ 100</span>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-foreground text-base tracking-tight" id="audit-grade-title">Menunggu Evaluasi...</h3>
+                  <p class="text-xs text-muted-foreground mt-1" id="audit-summary-text">Simulasi algoritma ATS standar enterprise.</p>
+                </div>
+              </div>
+
+              <!-- Rubric Breakdown Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs" id="rubric-grid">
+                <!-- Injected dynamically -->
+              </div>
+
+              <!-- Recommendations list -->
+              <div class="space-y-2 pt-2 border-t border-border">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                  <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-amber-500"></i>
+                  <span>Rekomendasi Perbaikan Prioritas:</span>
+                </h4>
+                <ul id="audit-suggestions-list" class="space-y-2 p-3 rounded-lg border border-border bg-muted/30">
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 1.2 JOB MATCHER SECTION -->
+      <div id="ats-pane-match" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-6 card">
+          <div class="card-header pb-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="card-title flex items-center gap-2">
+                  <i data-lucide="briefcase" class="w-4 h-4 text-primary"></i>
+                  <span>Job Description (Lowongan)</span>
+                </h2>
+                <p class="card-description">Paste teks kriteria lowongan kerja yang ditargetkan.</p>
+              </div>
+              <button onclick="loadSampleJobDescription()" class="btn btn-secondary text-xs h-7 px-2">
+                + Contoh Lowongan
+              </button>
+            </div>
+          </div>
+          <div class="card-content space-y-4">
+            <textarea id="jd-input-text" rows="5" class="textarea font-mono text-xs leading-relaxed" placeholder="Paste deskripsi pekerjaan / requirements di sini..."></textarea>
+            
+            <label class="block text-xs font-medium text-foreground pt-1">Resume untuk Dicocokkan:</label>
+            <textarea id="match-resume-text" rows="5" class="textarea font-mono text-xs leading-relaxed" placeholder="Paste resume yang ingin dicocokkan..."></textarea>
+
+            <button onclick="runJobMatch()" id="btn-run-match" class="btn btn-primary w-full h-10 font-semibold shadow-sm">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              <span>Hitung Match % & Missing Keywords</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 card">
+          <div class="card-header pb-4">
+            <h2 class="card-title">Hasil Skill & Keyword Matching</h2>
+            <p class="card-description">Analisis kecocokan semantik skill antara resume dan kebutuhan rekruter.</p>
+          </div>
+          <div class="card-content">
+            <div id="match-empty-state" class="py-16 text-center text-muted-foreground">
+              <div class="w-12 h-12 rounded-full border border-dashed border-border flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="scan-search" class="w-5 h-5 opacity-60"></i>
+              </div>
+              <p class="text-xs font-medium max-w-xs mx-auto">Masukkan teks lowongan dan resume, lalu klik tombol hitung.</p>
+            </div>
+
+            <div id="match-results-content" class="hidden space-y-5">
+              <div class="p-4 rounded-xl border border-border bg-muted/40 flex items-center justify-between">
+                <div>
+                  <span class="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Skor Kecocokan</span>
+                  <div class="text-3xl font-extrabold text-foreground mt-0.5 tracking-tight" id="match-percentage-text">0%</div>
+                </div>
+                <div class="text-right text-xs text-muted-foreground">
+                  <span id="match-matched-count" class="font-semibold text-foreground">0</span> cocok dari <span id="match-total-count" class="font-semibold text-foreground">0</span> kata kunci
+                </div>
+              </div>
+
+              <!-- Matched Keywords -->
+              <div class="space-y-2">
+                <span class="text-xs font-semibold text-emerald-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                  <span>Matched Skills (Ditemukan di Resume):</span>
+                </span>
+                <div id="matched-keywords-tags" class="flex flex-wrap gap-1.5 p-3 rounded-lg border border-border bg-muted/20 min-h-[42px]"></div>
+              </div>
+
+              <!-- Missing Keywords -->
+              <div class="space-y-2">
+                <span class="text-xs font-semibold text-rose-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+                  <span>Missing Skills (Disarankan Ditambahkan):</span>
+                </span>
+                <div id="missing-keywords-tags" class="flex flex-wrap gap-1.5 p-3 rounded-lg border border-border bg-muted/20 min-h-[42px]"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 1.3 STAR BULLET REWRITER -->
+      <div id="ats-pane-star" class="hidden max-w-4xl mx-auto card">
+        <div class="card-header pb-4">
+          <h2 class="card-title flex items-center gap-2">
+            <i data-lucide="wand-2" class="w-4 h-4 text-amber-500"></i>
+            <span>STAR Bullet Point Optimizer</span>
+          </h2>
+          <p class="card-description">Ubah draf kalimat resume pasif menjadi pernyataan berbobot tinggi dengan formula STAR (Situation, Task, Action, Result).</p>
+        </div>
+        <div class="card-content space-y-4">
+          
+          <div>
+            <label class="block text-xs font-medium text-foreground mb-1">Draf Kalimat Mentah:</label>
+            <div class="flex gap-2">
+              <input type="text" id="star-input-bullet" class="input flex-1" value="Responsible for maintaining backend APIs and fixing bugs.">
+              <button onclick="optimizeBullet()" id="btn-opt-bullet" class="btn btn-primary h-9 px-4 shrink-0">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                <span>Optimize</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-foreground mb-1">Target Posisi:</label>
+              <input type="text" id="star-input-role" class="input" value="Senior Backend Engineer">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-foreground mb-1">Konteks Teknologi (Opsional):</label>
+              <input type="text" id="star-input-context" class="input" value="PostgreSQL, Redis, latency reduction">
+            </div>
+          </div>
+
+          <!-- Variations Output -->
+          <div id="star-results" class="hidden space-y-3 pt-4 border-t border-border">
+            <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">3 Formula Siap Pakai:</span>
+
+            <div class="p-3.5 rounded-lg border border-border bg-muted/30 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="badge badge-warning text-[10px]">1. Impact & Metrics First</span>
+                <button onclick="copyText('star-var-1')" class="btn btn-ghost h-6 px-2 text-xs">
+                  <i data-lucide="copy" class="w-3 h-3"></i> <span>Salin</span>
+                </button>
+              </div>
+              <p id="star-var-1" class="text-xs sm:text-sm font-medium text-foreground leading-relaxed"></p>
+            </div>
+
+            <div class="p-3.5 rounded-lg border border-border bg-muted/30 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="badge badge-secondary text-[10px]">2. Architecture & Technical Depth</span>
+                <button onclick="copyText('star-var-2')" class="btn btn-ghost h-6 px-2 text-xs">
+                  <i data-lucide="copy" class="w-3 h-3"></i> <span>Salin</span>
+                </button>
+              </div>
+              <p id="star-var-2" class="text-xs sm:text-sm font-medium text-foreground leading-relaxed"></p>
+            </div>
+
+            <div class="p-3.5 rounded-lg border border-border bg-muted/30 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="badge badge-success text-[10px]">3. Leadership & Execution</span>
+                <button onclick="copyText('star-var-3')" class="btn btn-ghost h-6 px-2 text-xs">
+                  <i data-lucide="copy" class="w-3 h-3"></i> <span>Salin</span>
+                </button>
+              </div>
+              <p id="star-var-3" class="text-xs sm:text-sm font-medium text-foreground leading-relaxed"></p>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 1.4 MULTI-FORMAT GENERATOR -->
+      <div id="ats-pane-generate" class="hidden card">
+        <div class="card-header pb-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="card-title">Ekspor ke 4 Format Standar</h2>
+              <p class="card-description">Semantic HTML (Print Ready PDF), 1-Column ATS Markdown, Plain Text, dan JSONResume.</p>
+            </div>
+            <button onclick="generateResumeFormats()" class="btn btn-secondary h-8 text-xs shrink-0">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Generate Ulang</span>
+            </button>
+          </div>
+        </div>
+        <div class="card-content space-y-3">
+          
+          <div class="tabs-container">
+            <button onclick="setGenView('html')" id="gen-tab-html" class="tab-trigger active">Printable HTML</button>
+            <button onclick="setGenView('markdown')" id="gen-tab-markdown" class="tab-trigger">Markdown</button>
+            <button onclick="setGenView('plain')" id="gen-tab-plain" class="tab-trigger">Plain Text</button>
+            <button onclick="setGenView('json')" id="gen-tab-json" class="tab-trigger">JSONResume</button>
+          </div>
+
+          <div class="border border-border rounded-lg overflow-hidden bg-card min-h-[380px] sm:min-h-[500px]">
+            <iframe id="gen-iframe" class="w-full h-[450px] sm:h-[550px] bg-white"></iframe>
+            <pre id="gen-text-preview" class="hidden w-full h-[450px] sm:h-[550px] p-4 text-xs font-mono overflow-auto bg-muted/40 text-foreground"></pre>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: MEDIA CONVERTER & PDF STUDIO -->
+    <!-- ================================================================= -->
+    <div id="tab-content-media" class="hidden space-y-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Tool 1: Image Converter & Compressor -->
+        <div class="card flex flex-col justify-between">
+          <div>
+            <div class="card-header pb-3">
+              <div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-2">
+                <i data-lucide="image-down" class="w-4 h-4"></i>
+              </div>
+              <h3 class="card-title">Smart Image Converter</h3>
+              <p class="card-description">Konversi ke WebP, AVIF, PNG, JPG dengan kompresi Libvips & stripping EXIF.</p>
+            </div>
+
+            <div class="card-content">
+              <form id="form-convert-image" onsubmit="handleImageConvert(event)" class="space-y-3">
+                <div>
+                  <label class="block text-xs font-medium text-foreground mb-1">Pilih Gambar:</label>
+                  <input type="file" id="img-file-input" accept="image/*" required class="input file:mr-2 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-xs file:bg-primary file:text-primary-foreground">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-medium text-foreground mb-1">Format Tujuan:</label>
+                    <select id="img-target-format" class="select text-xs">
+                      <option value="webp" selected>WebP (Modern)</option>
+                      <option value="avif">AVIF (Super Hemat)</option>
+                      <option value="png">PNG (Lossless)</option>
+                      <option value="jpeg">JPEG (Universal)</option>
+                      <option value="tiff">TIFF</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-foreground mb-1">Kualitas (1-100):</label>
+                    <input type="number" id="img-quality" min="10" max="100" value="80" class="input text-xs">
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 text-xs pt-1">
+                  <label class="flex items-center gap-1.5 cursor-pointer">
+                    <input type="checkbox" id="img-strip-exif" checked class="rounded border-border text-primary focus:ring-ring">
+                    <span>Hapus EXIF</span>
+                  </label>
+                  <label class="flex items-center gap-1.5 cursor-pointer">
+                    <input type="checkbox" id="img-grayscale" class="rounded border-border text-primary focus:ring-ring">
+                    <span>Grayscale</span>
+                  </label>
+                </div>
+
+                <button type="submit" id="btn-convert-img" class="btn btn-primary w-full mt-2 h-9 font-semibold">
+                  <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                  <span>Konversi & Unduh</span>
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="p-4 pt-0">
+            <div id="img-convert-status" class="min-h-[20px]"></div>
+          </div>
+        </div>
+
+        <!-- Tool 2: Images to PDF -->
+        <div class="card flex flex-col justify-between">
+          <div>
+            <div class="card-header pb-3">
+              <div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-2">
+                <i data-lucide="files" class="w-4 h-4"></i>
+              </div>
+              <h3 class="card-title">Images to PDF Document</h3>
+              <p class="card-description">Gabungkan kumpulan foto / scan struk menjadi 1 dokumen PDF rapi.</p>
+            </div>
+
+            <div class="card-content">
+              <form id="form-images-to-pdf" onsubmit="handleImagesToPdf(event)" class="space-y-3">
+                <div>
+                  <label class="block text-xs font-medium text-foreground mb-1">Pilih Gambar (Multiple):</label>
+                  <input type="file" id="images-pdf-input" accept="image/*" multiple required class="input file:mr-2 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-xs file:bg-primary file:text-primary-foreground">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-foreground mb-1">Ukuran Halaman:</label>
+                  <select id="pdf-page-size" class="select text-xs">
+                    <option value="a4" selected>Standar A4</option>
+                    <option value="letter">Letter</option>
+                    <option value="fit">Fit Image Dimensions</option>
+                  </select>
+                </div>
+
+                <button type="submit" id="btn-images-pdf" class="btn btn-primary w-full mt-4 h-9 font-semibold">
+                  <i data-lucide="file-plus" class="w-3.5 h-3.5"></i>
+                  <span>Buat Dokumen PDF</span>
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="p-4 pt-0">
+            <div id="images-pdf-status" class="min-h-[20px]"></div>
+          </div>
+        </div>
+
+        <!-- Tool 3: PDF Merger & Text Extractor -->
+        <div class="card flex flex-col justify-between">
+          <div>
+            <div class="card-header pb-3">
+              <div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-2">
+                <i data-lucide="file-stack" class="w-4 h-4"></i>
+              </div>
+              <h3 class="card-title">PDF Merger & Extractor</h3>
+              <p class="card-description">Gabungkan beberapa file PDF atau ekstrak teks mentah untuk AI.</p>
+            </div>
+
+            <div class="card-content space-y-3">
+              <div class="p-3 rounded-lg border border-border bg-muted/30 space-y-2">
+                <span class="text-xs font-semibold text-foreground block">1. Gabungkan PDF:</span>
+                <input type="file" id="pdf-merge-input" accept="application/pdf" multiple class="input file:mr-2 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-xs file:bg-primary file:text-primary-foreground">
+                <button onclick="handleMergePdfs()" class="btn btn-secondary w-full h-8 text-xs font-semibold">
+                  Gabungkan File PDF
+                </button>
+              </div>
+
+              <div class="p-3 rounded-lg border border-border bg-muted/30 space-y-2">
+                <span class="text-xs font-semibold text-foreground block">2. Ekstraksi Teks PDF:</span>
+                <input type="file" id="pdf-extract-input" accept="application/pdf" class="input file:mr-2 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-xs file:bg-primary file:text-primary-foreground">
+                <button onclick="handleExtractPdf()" class="btn btn-secondary w-full h-8 text-xs font-semibold">
+                  Ekstrak Teks & Metadata
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 pt-0">
+            <div id="pdf-tools-status" class="min-h-[20px]"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Text Extractor Result Box -->
+      <div id="pdf-text-result-box" class="hidden card">
+        <div class="card-header pb-3">
+          <div class="flex items-center justify-between">
+            <h3 class="card-title flex items-center gap-2">
+              <i data-lucide="file-text" class="w-4 h-4 text-primary"></i>
+              <span>Hasil Ekstraksi Teks PDF</span>
+            </h3>
+            <button onclick="copyText('pdf-extracted-pre')" class="btn btn-secondary h-7 px-2.5 text-xs">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Salin Semua</span>
+            </button>
+          </div>
+        </div>
+        <div class="card-content">
+          <pre id="pdf-extracted-pre" class="p-4 bg-muted/40 rounded-lg text-xs font-mono max-h-72 overflow-auto border border-border text-foreground"></pre>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: API & MCP DOCUMENTATION -->
+    <!-- ================================================================= -->
+    <div id="tab-content-api" class="hidden max-w-4xl mx-auto card">
+      <div class="card-header pb-4">
+        <h2 class="card-title flex items-center gap-2">
+          <i data-lucide="terminal" class="w-4 h-4 text-primary"></i>
+          <span>Dokumentasi REST API & Konfigurasi MCP</span>
+        </h2>
+        <p class="card-description">Integrasikan engine ini ke dalam aplikasi pihak ketiga, Claude Desktop, atau Cursor AI.</p>
+      </div>
+      <div class="card-content space-y-5">
+        
+        <!-- MCP Config -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-foreground">1. Konfigurasi Client MCP (Claude Desktop / Cursor):</span>
+            <button onclick="copyCode('mcp-code-snippet')" class="btn btn-ghost h-6 px-2 text-xs">
+              <i data-lucide="copy" class="w-3 h-3"></i> <span>Salin JSON</span>
+            </button>
+          </div>
+          <pre id="mcp-code-snippet" class="p-4 bg-zinc-950 text-emerald-400 rounded-lg text-xs font-mono overflow-x-auto border border-border leading-relaxed">{
+  "mcpServers": {
+    "media-converter": {
+      "command": "node",
+      "args": ["/app/projects/media-converter-mcp/dist/index.js"]
+    },
+    "ats-resume": {
+      "command": "node",
+      "args": ["/app/projects/ats-resume-mcp/dist/index.js"]
+    }
+  }
+}</pre>
+        </div>
+
+        <!-- REST API cURL -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-foreground">2. Contoh cURL Audit ATS Resume:</span>
+            <button onclick="copyCode('curl-code-snippet')" class="btn btn-ghost h-6 px-2 text-xs">
+              <i data-lucide="copy" class="w-3 h-3"></i> <span>Salin cURL</span>
+            </button>
+          </div>
+          <pre id="curl-code-snippet" class="p-4 bg-zinc-950 text-sky-300 rounded-lg text-xs font-mono overflow-x-auto border border-border leading-relaxed">curl -X POST http://localhost:8080/api/ats/review \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Alex Pratama\nalex@tech.io\nSummary: Senior Software engineer..."}'</pre>
+        </div>
+
+        <!-- Image Convert cURL -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-foreground">3. Contoh cURL Konversi Gambar ke WebP:</span>
+            <button onclick="copyCode('curl-img-snippet')" class="btn btn-ghost h-6 px-2 text-xs">
+              <i data-lucide="copy" class="w-3 h-3"></i> <span>Salin cURL</span>
+            </button>
+          </div>
+          <pre id="curl-img-snippet" class="p-4 bg-zinc-950 text-amber-300 rounded-lg text-xs font-mono overflow-x-auto border border-border leading-relaxed">curl -X POST http://localhost:8080/api/media/convert-image \
+  -F "file=@foto.png" \
+  -F "format=webp" \
+  -F "quality=80" \
+  --output foto.webp</pre>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-border bg-background py-5 text-center text-xs text-muted-foreground mt-auto">
+    Micro-SaaS Web Studio &bull; Built with Shadcn UI & Clean Architecture &copy; 2026
+  </footer>
+
+  <!-- App Script (ES Module) -->
+  <script type="module" src="/js/app.js"></script>
+
+</body>
+</html>

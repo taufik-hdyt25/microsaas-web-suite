@@ -1,0 +1,13 @@
+services:
+  microsaas-web:
+    build: .
+    container_name: microsaas-web-suite
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    volumes:
+      - ./uploads:/app/uploads
+      - ./outputs:/app/outputs
